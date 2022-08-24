@@ -1,0 +1,17 @@
+/* ***************************** */
+/* generics */
+/* ***************************** */
+
+@import './assets/scss/generic/fonts';
+@import './assets/scss/generic/variables';
+@import './assets/scss/generic/functions';
+@import './assets/scss/generic/mixins';
+@import './assets/scss/generic/base';
+@import './assets/scss/generic/reset';
+
+/* ***************************** */
+/* components */
+/* ***************************** */
+@import './assets/scss/components/header';
+@import './assets/scss/components/search-field';
+@import './assets/scss/components/submit-button';
