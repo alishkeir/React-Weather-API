@@ -1,0 +1,9 @@
+.form {
+    display: flex;
+    flex-direction: row;
+
+    @include breakpoint-down(mobile) {
+        justify-content: space-evenly;
+        align-items: center;
+    }
+}

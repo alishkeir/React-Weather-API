@@ -1,39 +1,59 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { WeatherDataContext } from '../context/WeatherDataContext';
+import { getWeatherColor, ShowFirst, ShowRest } from '../utils/functions';
 
 const WeatherResults = () => {
-    const { wetherData } = useContext(WeatherDataContext);
+    const [id, setId] = useState(800);
+    const { wetherData, name } = useContext(WeatherDataContext);
     let canShowEmpty = false;
 
     useEffect(() => {
-        console.log('_______________');
-        console.log(wetherData);
-        console.log('_______________');
+        if (wetherData) {
+            if (wetherData.length > 0) {
+                setId(wetherData[0].weather[0].id);
+            }
+        }
     }, [wetherData]);
 
     const ReturnWeatherData = () => {
-        if (wetherData.length > 0) {
-            canShowEmpty = true;
-            return wetherData.forEach((weatherItem) => {
-                console.log(
-                    new Date(weatherItem.dt_txt).toLocaleTimeString('en-uk', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    })
+        if (wetherData) {
+            if (wetherData.length > 0) {
+                canShowEmpty = true;
+
+                let firstData = wetherData.shift();
+                return (
+                    <>
+                        <ShowFirst firstData={firstData} name={name} />
+                        <ShowRest wetherData={wetherData} />
+                    </>
                 );
-                console.log(weatherItem);
-                console.log(weatherItem.weather[0]);
-            });
+            }
+            if (canShowEmpty)
+                return (
+                    <h2 className='empty-results'>
+                        No weather data for this location
+                    </h2>
+                );
+        } else {
+            return (
+                <h2 className='empty-results'>
+                    No weather data for this location
+                </h2>
+            );
         }
-
-        if (canShowEmpty) return '<h2>No weather data for this location</h2>';
     };
-
     return (
-        <div className='weather-container'>
-            <ReturnWeatherData />
-            <div className='weather-now'></div>
-            <div className='weather-today'></div>
+        <div
+            className='weather-container'
+            style={{ background: getWeatherColor(id) }}
+        >
+            {wetherData.length === 0 ? (
+                <h2 className='empty-results'>
+                    No weather data for this location
+                </h2>
+            ) : (
+                <ReturnWeatherData />
+            )}
         </div>
     );
 };

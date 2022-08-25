@@ -5,12 +5,14 @@ import { WeatherDataContext } from './WeatherDataContext';
 export const SearchContext = createContext();
 
 const SearchContextProvider = ({ children }) => {
-    const [search, setSearch] = useState('Beirut');
+    const [search, setSearch] = useState('Beirut, LB');
 
     let { handleSetWeatherData } = useContext(WeatherDataContext);
 
     useEffect(() => {
-        getData(search).then((res) => handleSetWeatherData(res));
+        getData(search).then((res) => {
+            handleSetWeatherData(res);
+        });
         // eslint-disable-next-line
     }, []);
 
@@ -21,6 +23,8 @@ const SearchContextProvider = ({ children }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         getData(search).then((res) => handleSetWeatherData(res));
+
+        document.getElementById('weather-search').blur();
     };
 
     return (

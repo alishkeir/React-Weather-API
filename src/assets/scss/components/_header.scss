@@ -1,6 +1,14 @@
 .header {
     background: #759eda;
-    height: 11vh;
+    height: 10rem;
     display: flex;
     align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+
+    @include breakpoint-down(mobile) {
+        height: 8rem;
+    }
 }

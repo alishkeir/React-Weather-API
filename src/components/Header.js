@@ -12,7 +12,10 @@ const Header = () => {
                     type='text'
                     value={search}
                     onChange={handleSearch}
+                    placeholder='Type in city name'
+                    id='weather-search'
                 />
+
                 <button type='submit' className='btn'>
                     Find Weather
                 </button>

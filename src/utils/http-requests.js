@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-let API_KEY = process.env.REACT_APP_OPEN_WEATHER_API_KEY
+export const API_KEY = process.env.REACT_APP_OPEN_WEATHER_API_KEY
     ? process.env.REACT_APP_OPEN_WEATHER_API_KEY
-    : null;
+    : '';
 
-let latLongURL = 'http://api.openweathermap.org/geo/1.0/direct';
+export const latLongURL = 'http://api.openweathermap.org/geo/1.0/direct';
 
-let geoLocationURL = 'http://api.openweathermap.org/data/2.5/forecast';
+export const geoLocationURL = 'http://api.openweathermap.org/data/2.5/forecast';
 
 const getLatLong = (location) => {
     return axios
@@ -17,7 +17,12 @@ const getLatLong = (location) => {
             },
         })
         .then((res) => {
-            return { lat: res.data[0].lat, lon: res.data[0].lon, status: 200 };
+            return {
+                lat: res.data[0].lat,
+                lon: res.data[0].lon,
+                status: 200,
+                name: `${res.data[0].name}, ${res.data[0].country}`,
+            };
         })
         .catch((err) => {
             return err.response;
@@ -25,23 +30,26 @@ const getLatLong = (location) => {
 };
 
 export const getData = (search) => {
-    return getLatLong(search).then((res) => {
-        if (res.status === 200) {
-            return axios
-                .get(geoLocationURL, {
-                    params: {
-                        appid: API_KEY,
-                        lat: res.lat,
-                        lon: res.lon,
-                        units: 'metric',
-                    },
-                })
-                .then((res) => {
-                    return res.data.list.slice(0, 8);
-                })
-                .catch((err) => {
-                    return err.response;
-                });
-        }
-    });
+    return getLatLong(search)
+        .then((res) => {
+            let cityName = res.name ? res.name : '';
+            if (res.status === 200) {
+                return axios
+                    .get(geoLocationURL, {
+                        params: {
+                            appid: API_KEY,
+                            lat: res.lat,
+                            lon: res.lon,
+                            units: 'metric',
+                        },
+                    })
+                    .then((res) => {
+                        return { data: res.data.list, cityName };
+                    })
+                    .catch((err) => {
+                        return err.response;
+                    });
+            }
+        })
+        .catch((err) => err.response);
 };

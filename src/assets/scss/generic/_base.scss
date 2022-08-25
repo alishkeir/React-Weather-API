@@ -1,6 +1,7 @@
 /* ------------------------------------------------------------ *\
 	Base
 \* ------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 html {
     font-size: 62.5%;
@@ -9,7 +10,7 @@ html {
 body {
     min-width: 320px;
     background: #fff;
-    font-family: $ff-inter;
+    font-family: $ff-raleway;
     font-weight: $font-weight-base;
     font-size: $font-size-base;
     line-height: $line-height-base;
