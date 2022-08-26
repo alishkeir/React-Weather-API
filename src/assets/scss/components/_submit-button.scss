@@ -11,4 +11,8 @@
     @include breakpoint-down(mobile) {
         font-size: 2rem !important;
     }
+
+    @include breakpoint-down(mobile-small) {
+        font-size: 1.7rem !important;
+    }
 }

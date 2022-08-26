@@ -7,14 +7,16 @@ const Header = () => {
     return (
         <header className='header'>
             <form className='form' onSubmit={handleSubmit}>
-                <input
-                    className='field'
-                    type='text'
-                    value={search}
-                    onChange={handleSearch}
-                    placeholder='Type in city name'
-                    id='weather-search'
-                />
+                <div className='search'>
+                    <input
+                        className='search-field'
+                        type='text'
+                        value={search}
+                        onChange={handleSearch}
+                        placeholder='Type in city name'
+                        id='weather-search'
+                    />
+                </div>
 
                 <button type='submit' className='btn'>
                     Find Weather

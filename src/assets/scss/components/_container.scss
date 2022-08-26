@@ -26,8 +26,35 @@
 
     &-today {
         display: flex;
-        width: 95vw;
         justify-content: space-around;
+        width: 95vw;
+        padding: 0 4rem;
+
+        &-prev,
+        &-next {
+            position: absolute;
+            z-index: 2;
+            align-items: center;
+            overflow: hidden;
+
+            img {
+                width: 3rem;
+                max-width: 3rem;
+                cursor: pointer;
+            }
+
+            display: flex;
+            height: 100%;
+        }
+
+        &-prev {
+            left: 0;
+            padding-right: 1rem;
+        }
+        &-next {
+            right: 0;
+            padding-left: 1rem;
+        }
     }
 
     &-now {

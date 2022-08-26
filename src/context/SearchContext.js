@@ -1,20 +1,35 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getData } from '../utils/http-requests';
+import { getCurrentLocation, getData } from '../utils/http-requests';
 import { WeatherDataContext } from './WeatherDataContext';
 
 export const SearchContext = createContext();
 
 const SearchContextProvider = ({ children }) => {
-    const [search, setSearch] = useState('Beirut, LB');
+    const [search, setSearch] = useState('');
 
     let { handleSetWeatherData } = useContext(WeatherDataContext);
 
     useEffect(() => {
-        getData(search).then((res) => {
-            handleSetWeatherData(res);
-        });
+        getCurrentLocation()
+            .then((res) => {
+                console.log(res);
+                if (res) {
+                    setSearch(res);
+                }
+            })
+            .catch((err) => console.log(err));
+
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if (search && search !== '') {
+            getData(search).then((res) => {
+                handleSetWeatherData(res);
+            });
+        }
+        // eslint-disable-next-line
+    }, [search]);
 
     const handleSearch = (e) => {
         setSearch(e.target.value);

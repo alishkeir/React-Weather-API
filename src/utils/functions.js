@@ -1,5 +1,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-
+import { useContext, useEffect, useRef, useState } from 'react';
+import { A11y, Controller, Navigation, Pagination, Scrollbar } from 'swiper';
 import storm from '../assets/images/weather-icons/storm.svg';
 import drizzle from '../assets/images/weather-icons/drizzle.svg';
 import rain from '../assets/images/weather-icons/rain.svg';
@@ -8,6 +9,9 @@ import fog from '../assets/images/weather-icons/fog.svg';
 import clear from '../assets/images/weather-icons/clear.svg';
 import partlycloudy from '../assets/images/weather-icons/partlycloudy.svg';
 import mostlycloudy from '../assets/images/weather-icons/mostlycloudy.svg';
+import rightArrow from '../assets/images/svg/right-arrow.svg';
+import leftArrow from '../assets/images/svg/left-arrow.svg';
+import { WeatherDataContext } from '../context/WeatherDataContext';
 
 export const getWeatherImage = (id) => {
     switch (true) {
@@ -114,77 +118,159 @@ export const ShowFirst = ({ firstData, name }) => {
     ) : null;
 };
 
-export const ShowRest = ({ wetherData }) => {
+const styles = {
+    enabled: {
+        opacity: 1,
+    },
+    disabled: {
+        opacity: 0.5,
+        pointerEvents: 'none',
+    },
+};
+
+export const ShowRest = ({ NewWeatherData }) => {
+    const [id, setId] = useState(800);
+    const { wetherData } = useContext(WeatherDataContext);
+    const [canClickPrev, setCanClickPrev] = useState(false);
+    const [canClickNext, setCanClickNex] = useState(true);
+    const [swiper, setSwiper] = useState();
+
+    const prevRef = useRef();
+    const nextRef = useRef();
+
+    useEffect(() => {
+        if (wetherData) {
+            if (wetherData.length > 0) {
+                setId(wetherData[0].weather[0].id);
+            }
+        }
+    }, [wetherData]);
+
+    useEffect(() => {
+        if (swiper) {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+            swiper.navigation.init();
+            swiper.navigation.update();
+        }
+    }, [swiper]);
+
     if (wetherData.length === 0) {
         return null;
     }
 
     return (
-        <Swiper
-            spaceBetween={2}
-            slidesPerView={1}
-            grabCursor={true}
-            className='weather-today'
-            breakpoints={{
-                374: {
-                    slidesPerView: 1,
-                },
-                575: {
-                    slidesPerView: 2,
-                },
-
-                767: {
-                    slidesPerView: 3,
-                },
-
-                1023: {
-                    slidesPerView: 4,
-                },
-                1199: {
-                    slidesPerView: 5,
-                },
-                1399: {
-                    slidesPerView: 6,
-                },
-                1440: {
-                    slidesPerView: 7,
-                },
-            }}
-        >
-            {wetherData.map((weatherItem) => {
-                let time = new Date(weatherItem.dt_txt).toLocaleTimeString(
-                    'en-GB',
-                    {
-                        hour: '2-digit',
-                        minute: '2-digit',
+        <>
+            <Swiper
+                style={{}}
+                onReachEnd={() => {
+                    setCanClickNex(false);
+                }}
+                onReachBeginning={() => {
+                    setCanClickPrev(false);
+                }}
+                modules={[Navigation, Pagination, Scrollbar, A11y, Controller]}
+                spaceBetween={2}
+                slidesPerView={1}
+                className='weather-today'
+                navigation={{
+                    prevEl: prevRef?.current,
+                    nextEl: nextRef?.current,
+                }}
+                updateOnWindowResize
+                observer
+                observeParents
+                initialSlide={0}
+                onSwiper={setSwiper}
+                onSlideChange={(swiper) => {
+                    if (swiper.activeIndex !== 0) {
+                        setCanClickPrev(true);
                     }
-                );
-                let date = new Date(weatherItem.dt_txt).toLocaleDateString(
-                    'en-GB'
-                );
+                }}
+                breakpoints={{
+                    374: {
+                        slidesPerView: 1,
+                    },
+                    500: {
+                        slidesPerView: 2,
+                    },
 
-                return (
-                    <SwiperSlide key={weatherItem.dt}>
-                        <div className='container container-small'>
-                            <div className='container-small-time'>
-                                <span>{date.split('/').join(' - ')}</span>
-                                <span>{time}</span>
+                    600: {
+                        slidesPerView: 3,
+                    },
+
+                    1023: {
+                        slidesPerView: 4,
+                    },
+                    1199: {
+                        slidesPerView: 5,
+                    },
+                    1399: {
+                        slidesPerView: 6,
+                    },
+                    1440: {
+                        slidesPerView: 7,
+                    },
+                }}
+            >
+                <span
+                    style={{ background: getWeatherColor(id) }}
+                    className='weather-today-prev'
+                    ref={prevRef}
+                >
+                    <img
+                        style={canClickPrev ? styles.enabled : styles.disabled}
+                        alt='prev'
+                        src={leftArrow}
+                    />
+                </span>
+                {NewWeatherData.map((weatherItem) => {
+                    let time = new Date(weatherItem.dt * 1000)
+                        .toLocaleString('en-GB')
+                        .replace(' ', '')
+                        .split(',')[1];
+                    let date = new Date(weatherItem.dt * 1000)
+                        .toLocaleString('en-GB')
+                        .replace(' ', '')
+                        .split(',')[0];
+
+                    return (
+                        <SwiperSlide key={weatherItem.dt}>
+                            <div className='container container-small'>
+                                <div className='container-small-time'>
+                                    <span>{date.split('/').join(' - ')}</span>
+                                    <span>
+                                        {time.substring(0, time.length - 3)}
+                                    </span>
+                                </div>
+                                <div className='container-small-image'>
+                                    <img
+                                        src={getWeatherImage(
+                                            weatherItem.weather[0].id
+                                        )}
+                                        alt={weatherItem.weather[0].description}
+                                    />
+                                </div>
+                                <div className='container-small-temp'>
+                                    {parseInt(weatherItem.main.temp)}℃
+                                </div>
                             </div>
-                            <div className='container-small-image'>
-                                <img
-                                    src={getWeatherImage(
-                                        weatherItem.weather[0].id
-                                    )}
-                                    alt={weatherItem.weather[0].description}
-                                />
-                            </div>
-                            <div className='container-small-temp'>
-                                {parseInt(weatherItem.main.temp)}℃
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                );
-            })}
-        </Swiper>
+                        </SwiperSlide>
+                    );
+                })}
+
+                <span
+                    style={{ background: getWeatherColor(id) }}
+                    className='weather-today-next'
+                    ref={nextRef}
+                >
+                    <img
+                        style={canClickNext ? styles.enabled : styles.disabled}
+                        alt='next'
+                        src={rightArrow}
+                    />
+                </span>
+            </Swiper>
+        </>
     );
 };

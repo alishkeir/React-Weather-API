@@ -24,7 +24,7 @@ const WeatherResults = () => {
                 return (
                     <>
                         <ShowFirst firstData={firstData} name={name} />
-                        <ShowRest wetherData={wetherData} />
+                        <ShowRest NewWeatherData={wetherData} />
                     </>
                 );
             }

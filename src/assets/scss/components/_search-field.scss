@@ -1,25 +1,31 @@
-.field {
-    padding: 1.2rem 1rem 0.2rem;
-    border: 0.2rem solid transparent;
-    background-color: transparent;
-    color: $c-white;
-    font-size: 2rem;
+.search {
     margin-left: 2rem;
-    margin-right: 2rem;
-
-    &::placeholder {
-        color: darken($c-white, 15%);
-    }
-
-    &:focus {
-        border-bottom: 0.2rem inset darken($c-darkest, 1%);
-    }
 
     @include breakpoint-down(mobile) {
         width: 50%;
-        margin-right: 0;
         margin-left: 1rem;
-        font-size: 1.7rem;
-        padding: 1rem 1rem 0.2rem;
+    }
+
+    &-field {
+        padding: 1.2rem 1rem;
+        border: 0.2rem solid transparent;
+        background-color: transparent;
+        color: $c-white;
+        font-size: 2rem;
+        width: 100%;
+
+        border-bottom: 0.2rem inset darken($c-darker, 7%);
+
+        &::placeholder {
+            color: darken($c-white, 15%);
+        }
+
+        @include breakpoint-down(mobile) {
+            font-size: 1.7rem;
+        }
+
+        @include breakpoint-down(mobile-small) {
+            font-size: 1.5rem;
+        }
     }
 }
