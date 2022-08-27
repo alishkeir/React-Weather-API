@@ -25,6 +25,7 @@ const SearchContextProvider = ({ children }) => {
             },
             (err) => {
                 console.log(err);
+                handleSetWeatherData('Beirut, LB');
             }
         );
         // eslint-disable-next-line
