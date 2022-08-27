@@ -12,7 +12,6 @@ const SearchContextProvider = ({ children }) => {
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(
             (response) => {
-                console.log(response.coords);
                 getData(
                     null,
                     response.coords.latitude,

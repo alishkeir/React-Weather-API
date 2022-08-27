@@ -45,7 +45,6 @@ export const getData = (search, lat, lon) => {
                 },
             })
             .then((res) => {
-                console.log(res);
                 return {
                     data: res.data.list,
                     cityName: `${res.data.city.name}, ${res.data.city.country}`,
@@ -69,7 +68,6 @@ export const getData = (search, lat, lon) => {
                         },
                     })
                     .then((res) => {
-                        console.log(res);
                         return {
                             data: res.data.list,
                             cityName: `${res.data.city.name}, ${res.data.city.country}`,
@@ -102,7 +100,6 @@ export const getCurrentLocation = async () => {
         return await axios
             .get('https://us1.locationiq.com/v1/reverse.php', { params })
             .then((res) => {
-                console.log(res.data.address);
                 if (res.status === 200) {
                     let city = '';
 
