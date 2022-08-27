@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getCurrentLocation, getData } from '../utils/http-requests';
+import { getData } from '../utils/http-requests';
 import { WeatherDataContext } from './WeatherDataContext';
 
 export const SearchContext = createContext();
@@ -10,26 +10,25 @@ const SearchContextProvider = ({ children }) => {
     let { handleSetWeatherData } = useContext(WeatherDataContext);
 
     useEffect(() => {
-        getCurrentLocation()
-            .then((res) => {
-                console.log(res);
-                if (res) {
-                    setSearch(res);
-                }
-            })
-            .catch((err) => console.log(err));
-
+        navigator.geolocation.getCurrentPosition(
+            (response) => {
+                console.log(response.coords);
+                getData(
+                    null,
+                    response.coords.latitude,
+                    response.coords.longitude
+                )
+                    .then((res) => {
+                        handleSetWeatherData(res);
+                    })
+                    .catch((err) => console.log(err));
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
         // eslint-disable-next-line
     }, []);
-
-    useEffect(() => {
-        if (search && search !== '') {
-            getData(search).then((res) => {
-                handleSetWeatherData(res);
-            });
-        }
-        // eslint-disable-next-line
-    }, [search]);
 
     const handleSearch = (e) => {
         setSearch(e.target.value);

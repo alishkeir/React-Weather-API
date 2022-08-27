@@ -33,10 +33,31 @@ const getLatLong = (location) => {
         });
 };
 
-export const getData = (search) => {
+export const getData = (search, lat, lon) => {
+    if (lat && lon) {
+        return axios
+            .get(geoLocationURL, {
+                params: {
+                    appid: API_KEY,
+                    lat: lat,
+                    lon: lon,
+                    units: 'metric',
+                },
+            })
+            .then((res) => {
+                console.log(res);
+                return {
+                    data: res.data.list,
+                    cityName: `${res.data.city.name}, ${res.data.city.country}`,
+                };
+            })
+            .catch((err) => {
+                return err.response;
+            });
+    }
+
     return getLatLong(search)
         .then((res) => {
-            let cityName = res.name ? res.name : '';
             if (res.status === 200) {
                 return axios
                     .get(geoLocationURL, {
@@ -44,11 +65,15 @@ export const getData = (search) => {
                             appid: API_KEY,
                             lat: res.lat,
                             lon: res.lon,
-                            units: 'metric',
+                            units: 'imperial',
                         },
                     })
                     .then((res) => {
-                        return { data: res.data.list, cityName };
+                        console.log(res);
+                        return {
+                            data: res.data.list,
+                            cityName: `${res.data.city.name}, ${res.data.city.country}`,
+                        };
                     })
                     .catch((err) => {
                         return err.response;
@@ -112,6 +137,9 @@ export const getCurrentLocation = async () => {
 
                     if (res.data.address.town) {
                         city = res.data.address.town;
+                    }
+                    if (res.data.address.city) {
+                        city = res.data.address.city;
                     }
 
                     return `${city}, ${res.data.address.country_code.toUpperCase()}`;
