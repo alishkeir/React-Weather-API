@@ -129,7 +129,7 @@ const styles = {
 };
 
 export const ShowRest = ({ NewWeatherData }) => {
-    const [id, setId] = useState(800);
+    // const [id, setId] = useState(800);
     const { wetherData } = useContext(WeatherDataContext);
     const [canClickPrev, setCanClickPrev] = useState(false);
     const [canClickNext, setCanClickNex] = useState(true);
@@ -138,13 +138,13 @@ export const ShowRest = ({ NewWeatherData }) => {
     const prevRef = useRef();
     const nextRef = useRef();
 
-    useEffect(() => {
-        if (wetherData) {
-            if (wetherData.length > 0) {
-                setId(wetherData[0].weather[0].id);
-            }
-        }
-    }, [wetherData]);
+    // useEffect(() => {
+    //     if (wetherData) {
+    //         if (wetherData.length > 0) {
+    //             setId(wetherData[0].weather[0].id);
+    //         }
+    //     }
+    // }, [wetherData]);
 
     useEffect(() => {
         if (swiper) {
@@ -214,7 +214,7 @@ export const ShowRest = ({ NewWeatherData }) => {
                 }}
             >
                 <span
-                    style={{ background: getWeatherColor(id) }}
+                    // style={{ background: getWeatherColor(id) }}
                     className='weather-today-prev'
                     ref={prevRef}
                 >
@@ -260,7 +260,7 @@ export const ShowRest = ({ NewWeatherData }) => {
                 })}
 
                 <span
-                    style={{ background: getWeatherColor(id) }}
+                    // style={{ background: getWeatherColor(id) }}
                     className='weather-today-next'
                     ref={nextRef}
                 >

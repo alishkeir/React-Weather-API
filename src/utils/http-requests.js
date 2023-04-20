@@ -64,7 +64,7 @@ export const getData = (search, lat, lon) => {
                             appid: API_KEY,
                             lat: res.lat,
                             lon: res.lon,
-                            units: 'imperial',
+                            units: 'metric',
                         },
                     })
                     .then((res) => {
